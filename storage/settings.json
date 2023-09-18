@@ -1,0 +1,15 @@
+{
+    "name": "Role Base Access Control With Laravel",
+    "description": "Role Base Access Control With Laravel",
+    "notif_email": "1",
+    "name_sender_email": "Administrator System",
+    "sender_email": "luthfi.ih@indobara.co.id",
+    "password_email": "lth@prg16",
+    "name_sender_wa": null,
+    "sender_wa": null,
+    "url_api_wa": null,
+    "key_wa": null,
+    "logo": "uploads\/website\/1695024150_prometheus_software_logo.svg",
+    "icon": "uploads\/website\/1695024150_prometheus_software_logo.svg",
+    "notif_wa": null
+}

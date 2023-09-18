@@ -16,6 +16,7 @@ use App\Http\Controllers\Cms\Ticketing\RequestSourceController;
 use App\Http\Controllers\Cms\Ticketing\StatusController;
 use App\Http\Controllers\Cms\Ticketing\TypeController;
 use App\Http\Controllers\Cms\UserController;
+use App\Http\Controllers\Cms\WebsiteController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -40,6 +41,8 @@ Route::prefix('cms')->middleware('auth')->group(function(){
     Route::resource('menus', MenuController::class);
 
     Route::resource('roles', RoleController::class);
+
+    Route::resource('website', WebsiteController::class);
 
     Route::get('trashed/users', [UserController::class, 'trashed'])->name('users.trashed');
     Route::post('trashed/users', [UserController::class, 'storeTrashed'])->name('users.trashed.store');

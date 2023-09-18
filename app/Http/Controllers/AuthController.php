@@ -26,7 +26,7 @@ class AuthController extends Controller
             // Login berhasil
             session(['current_role' => Auth::user()->default_role]);
             // dd(session('current_role'));
-            return redirect()->intended(route('cms.dashboard')); // Ganti dengan halaman setelah login berhasil
+            return redirect()->intended(route('dashboard.index')); // Ganti dengan halaman setelah login berhasil
         } else {
             // Login gagal
             session()->flash('warning', 'Email or password not matches');
