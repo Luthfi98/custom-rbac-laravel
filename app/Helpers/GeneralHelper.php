@@ -56,25 +56,23 @@ class GeneralHelper {
         $user_id = Auth::user()->id;
         $role_id = session('current_role');
 
-        // dd($isMenu);
-
         $permission = Permission::where(['name' => $access])->first();
 
         $userRole = UserRole::where(['role_id' => $role_id, 'user_id' => $user_id])->first();
 
         $rolePermission = RolePermission::where(['role_id' => $role_id, 'permission_id' => $permission?->id])->first();
-        return true;
-        // if(!$userRole || !$rolePermission)
-        // {
-        //     if($isMenu){
-        //         return false;
-        //     }else{
-        //         return abort(Response::HTTP_FORBIDDEN, '403 Unauthorized');
-        //     }
+        // return true;
+        if(!$userRole || !$rolePermission)
+        {
+            if($isMenu){
+                return false;
+            }else{
+                return abort(Response::HTTP_FORBIDDEN, '403 Unauthorized');
+            }
 
-        // }else{
-        //     return true;
-        // }
+        }else{
+            return true;
+        }
 
         // dd();
     }

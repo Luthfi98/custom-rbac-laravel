@@ -98,9 +98,10 @@ class MenuController extends Controller
         $this->access->canAccess('menu-create');
         $validator = Validator::make($request->all(), [
             'parent' => 'nullable', // Add your validation rules
-            'name' => 'required|string|max:255',
-            'path' => 'required|string|max:255',
-            'icon' => 'required|string|max:255',
+            'name' => 'required|string|max:100',
+            'module' => 'required|string|max:100',
+            'path' => 'required|string|max:50',
+            'icon' => 'required|string',
             'type' => 'required|in:cms,landing',
             'is_label' => 'nullable',
             'permissions' => 'required|array',
@@ -114,12 +115,13 @@ class MenuController extends Controller
         }
 
         $menu = new Menu();
-        $menu->parent_id = $request->parent;
-        $menu->name = $request->name;
-        $menu->path = $request->path;
-        $menu->icon = $request->icon;
-        $menu->type = $request->type;
-        $menu->is_label = $request->is_label ? 1 : 0;
+        $menu->parent_id    = $request->parent;
+        $menu->name         = $request->name;
+        $menu->module       = $request->module;
+        $menu->path         = $request->path;
+        $menu->icon         = $request->icon;
+        $menu->type         = $request->type;
+        $menu->is_label     = $request->is_label ? 1 : 0;
 
         $menu->save();
 
@@ -167,9 +169,10 @@ class MenuController extends Controller
 
         $validator = Validator::make($request->all(), [
             'parent' => 'nullable', // Add your validation rules
-            'name' => 'required|string|max:255',
-            'path' => 'required|string|max:255',
-            'icon' => 'required|string|max:255',
+            'name' => 'required|string|max:100',
+            'module' => 'required|string|max:100',
+            'path' => 'required|string|max:50',
+            'icon' => 'required|string',
             'type' => 'required|in:cms,landing',
             'is_label' => 'nullable',
             'permissions' => 'required|array',
@@ -241,12 +244,12 @@ class MenuController extends Controller
                 ];
             }
         }
-        // dd($nameBefore);
         // Insert new permissions
         Permission::insert($newPermissions);
 
         // Delete outdated permissions
         $permissionsToDelete = array_diff($existingPermissions, $nameBefore);
+        // dd($permissionsToDelete, $nameBefore);
         Permission::whereIn('name', $permissionsToDelete)->delete();
 
         return true;

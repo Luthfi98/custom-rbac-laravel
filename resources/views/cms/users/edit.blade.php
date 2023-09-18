@@ -85,7 +85,7 @@
 
                         <div class="mt-3">
                             <a href="{{ route('users.index') }}" class="btn btn-secondary">{{ __('Back') }}</a>
-                            <button type="submit" class="btn btn-primary">{{__('Create')}}</button>
+                            <button type="submit" class="btn btn-primary">{{__('Update')}}</button>
                         </div>
                     </form>
                 </div>

@@ -44,7 +44,7 @@
                         <div class="col-6">
 
                             @php
-                            $select = $currentRole->id == $role->role->id ? 'bg-primary text-white disabled' : 'bg-white text-primary btn-outline-primary';
+                            $select = $currentRole?->id == $role->role->id ? 'bg-primary text-white disabled' : 'bg-white text-primary btn-outline-primary';
                             @endphp
                             <form id="role-form-{{$role->role->id}}" action="{{route('profile.change', $role->role->id)}}" method="POST" style="display: none;">
                                 @csrf

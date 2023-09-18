@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Auth;
 
 
 Route::prefix('cms')->middleware('auth')->group(function(){
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('cms.dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
     Route::get('trashed/menus', [MenuController::class, 'trashed'])->name('menus.trashed');
     Route::post('trashed/menus', [MenuController::class, 'storeTrashed'])->name('menus.trashed.store');
@@ -52,21 +52,6 @@ Route::prefix('cms')->middleware('auth')->group(function(){
     Route::get('profile', [ProfileController::class, 'index'])->name('profile');
     Route::post('profile', [ProfileController::class, 'store'])->name('profile.store');
     Route::post('profile/change/{any}', [ProfileController::class, 'change'])->name('profile.change');
-
-    Route::prefix('ticketing')->group(function(){
-        Route::resource('ticket-types', TypeController::class);
-        Route::resource('ticket-statuses', StatusController::class);
-        Route::resource('ticket-categories', TicketingCategoryController::class);
-        Route::resource('ticket-sources', RequestSourceController::class);
-    });
-
-    Route::prefix('pos')->group(function(){
-        Route::post('pos-products/trashed', [ProductController::class, 'storeTrashed'])->name('pos-products.trashed.store');
-        Route::resource('pos-categories', CategoryController::class);
-        Route::resource('pos-brands', BrandController::class);
-        Route::resource('pos-units', UnitController::class);
-        Route::resource('pos-products', ProductController::class);
-    });
 });
 
 Route::get('login', [AuthController::class, 'index'])->name('login');

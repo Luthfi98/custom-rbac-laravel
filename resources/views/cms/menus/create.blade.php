@@ -31,13 +31,27 @@
                             @enderror
                         </div>
 
-                        <div class="form-group mt-3">
-                            <label for="name">Name:</label>
-                            <input type="text" name="name" id="name" class="form-control" required>
-                            @error('name')
-                                <div class="text-danger">{{ $message }}</div>
-                            @enderror
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group mt-3">
+                                    <label for="name">Name:</label>
+                                    <input type="text" name="name" id="name" class="form-control" required>
+                                    @error('name')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group mt-3">
+                                    <label for="module">Module:</label>
+                                    <input type="text" name="module" id="module" readonly class="form-control" required>
+                                    @error('module')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
+
 
                         <div class="form-group mt-3">
                             <label for="path">Path:</label>
@@ -137,5 +151,13 @@
             $("#text-is-label").text("No");
         }
     });
+
+    $("#name").keyup(function(){
+        var name = $(this).val();
+        name = name.replace(['module-']);
+        name = name.replace(/[^a-zA-Z0-9]+/g, '-');
+        name = name.toLowerCase();
+        $("#module").val(`module-${name}`)
+    })
 </script>
 @endsection

@@ -18,20 +18,40 @@
                             <select name="parent" id="parent" class="form-control select2">
                                 <option value="">Select Parent</option>
                                 @foreach ($parents as $parentMenu)
-                                    <option value="{{ $parentMenu->id }}" {{ $menu->parent_id == $parentMenu->id ? 'selected' : ''   }} >{{ $parentMenu->name }}</option>
+                                <option {{ $menu->parent_id == $parentMenu->id ? 'selected' : ''   }} value="{{ $parentMenu->id }}">{{ $parentMenu->name }}</option>
+                                @foreach ($parentMenu->child as $childMenu)
+                                    <option {{ $menu->parent_id == $childMenu->id ? 'selected' : ''   }} value="{{ $childMenu->id }}">- {{ $childMenu->name }}</option>
+                                    @foreach ($childMenu->child as $subChildMenu)
+                                        <option {{ $menu->parent_id == $subChildMenu->id ? 'selected' : ''   }} value="{{ $subChildMenu->id }}">-- {{ $subChildMenu->name }}</option>
+                                    @endforeach
                                 @endforeach
+                            @endforeach
                             </select>
                             @error('parent')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <div class="form-group mt-3">
-                            <label for="name">Name:</label>
-                            <input type="text" name="name" id="name" value="{{ $menu->name }}" class="form-control" required>
-                            @error('name')
-                                <div class="text-danger">{{ $message }}</div>
-                            @enderror
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group mt-3">
+                                    <label for="name">Name:</label>
+                                    <input type="text" name="name" id="name" value="{{ $menu->name }}" class="form-control" required>
+                                    @error('name')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group mt-3">
+                                    <label for="module">Module:</label>
+                                    <input type="text" name="module" id="module" value="{{ $menu->module }}" readonly class="form-control" required>
+                                    @error('module')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
 
                         <div class="form-group mt-3">
