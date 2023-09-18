@@ -46,7 +46,7 @@
                             <div class="col-lg-6">
                                 <div class="form-group mt-3">
                                     <label for="module">Module:</label>
-                                    <input type="text" name="module" id="module" value="{{ $menu->module }}" readonly class="form-control" required>
+                                    <input type="text" name="module" id="module" value="{{ $menu->module }}" class="form-control" required>
                                     @error('module')
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror

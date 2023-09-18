@@ -15,7 +15,8 @@ use Illuminate\Support\Str;
 
 class MenuController extends Controller
 {
-    private $listAccess = ['access', 'create', 'delete', 'detail', 'export', 'import', 'read', 'restore', 'show', 'trash', 'update'];
+    private $listAccess = [
+        'show', 'read', 'create', 'update', 'delete', 'detail', 'access', 'import', 'export', 'trash', 'restore'];
 
     private $access;
 

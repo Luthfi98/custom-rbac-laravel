@@ -231,21 +231,25 @@ class RoleController extends Controller
             ->whereNotIn('permission_id', $permissions)
             ->delete();
 
-        foreach ($request->users as $key => $value) {
-            $userRole = UserRole::where(['role_id' => $request->id, 'user_id' => $value])->first();
+        if ($request->users) {
+            foreach ($request->users as $key => $value) {
+                $userRole = UserRole::where(['role_id' => $request->id, 'user_id' => $value])->first();
 
-            if (!$userRole) {
-                $userRole = new UserRole();
-                $userRole->role_id = $request->id;
-                $userRole->user_id = $value;
-                $userRole->save();
+                if (!$userRole) {
+                    $userRole = new UserRole();
+                    $userRole->role_id = $request->id;
+                    $userRole->user_id = $value;
+                    $userRole->save();
+                }
+
             }
+
+            UserRole::where('role_id', $request->id)
+                ->whereNotIn('user_id', $request->users)
+                ->delete();
 
         }
 
-        UserRole::where('role_id', $request->id)
-            ->whereNotIn('user_id', $request->users)
-            ->delete();
 
 
         session()->flash('success', 'Successfully Updated Permissions');

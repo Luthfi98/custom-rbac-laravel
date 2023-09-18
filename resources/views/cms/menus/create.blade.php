@@ -44,7 +44,7 @@
                             <div class="col-lg-6">
                                 <div class="form-group mt-3">
                                     <label for="module">Module:</label>
-                                    <input type="text" name="module" id="module" readonly class="form-control" required>
+                                    <input type="text" name="module" id="module" class="form-control" required>
                                     @error('module')
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
@@ -154,9 +154,9 @@
 
     $("#name").keyup(function(){
         var name = $(this).val();
-        name = name.replace(['module-']);
-        name = name.replace(/[^a-zA-Z0-9]+/g, '-');
         name = name.toLowerCase();
+        name = name.replace('module', '');
+        name = name.replace(/[^a-zA-Z0-9]+/g, '-');
         $("#module").val(`module-${name}`)
     })
 </script>

@@ -23,8 +23,6 @@ class ProfileController extends Controller
             'currentRole' => $currentRole
         ];
 
-        // dd($data);
-
         return view('cms.profiles.index', $data);
     }
 

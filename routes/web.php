@@ -1,20 +1,15 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Cms\Article\CategoryController as ArticleCategoryController;
+use App\Http\Controllers\Cms\Article\TagController as ArticleTagController;
+use App\Http\Controllers\Cms\Article\DataController as ArticleDataController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Cms\DashboardController;
 use App\Http\Controllers\Cms\MenuController;
 use App\Http\Controllers\Cms\PermissionController;
-use App\Http\Controllers\Cms\Pos\BrandController;
-use App\Http\Controllers\Cms\Pos\CategoryController;
-use App\Http\Controllers\Cms\Pos\ProductController;
-use App\Http\Controllers\Cms\Pos\UnitController;
 use App\Http\Controllers\Cms\ProfileController;
 use App\Http\Controllers\Cms\RoleController;
-use App\Http\Controllers\Cms\Ticketing\CategoryController as TicketingCategoryController;
-use App\Http\Controllers\Cms\Ticketing\RequestSourceController;
-use App\Http\Controllers\Cms\Ticketing\StatusController;
-use App\Http\Controllers\Cms\Ticketing\TypeController;
 use App\Http\Controllers\Cms\UserController;
 use App\Http\Controllers\Cms\WebsiteController;
 use Illuminate\Support\Facades\Auth;
@@ -55,6 +50,13 @@ Route::prefix('cms')->middleware('auth')->group(function(){
     Route::get('profile', [ProfileController::class, 'index'])->name('profile');
     Route::post('profile', [ProfileController::class, 'store'])->name('profile.store');
     Route::post('profile/change/{any}', [ProfileController::class, 'change'])->name('profile.change');
+
+    Route::prefix('article')->group(function(){
+        Route::resource('categories-article', ArticleCategoryController::class);
+        Route::resource('tags-article', ArticleTagController::class);
+        Route::post('data-article/trashed', [ArticleDataController::class, 'storeTrashed'])->name('data-article.trashed.store');
+        Route::resource('data-article', ArticleDataController::class);
+    });
 });
 
 Route::get('login', [AuthController::class, 'index'])->name('login');

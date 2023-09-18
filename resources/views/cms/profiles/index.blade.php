@@ -20,7 +20,7 @@
                             </div>
                             <div class="author-info">
                                 <h6 class="title"> {{ $user->fullname }} </h6>
-                                <span>{{ $user->role? $user->role->name : $currentRole->name}}</span>
+                                <span>{{ $user->role? $user->role->name : $currentRole?->name}}</span>
                             </div>
                         </div>
                     </div>
