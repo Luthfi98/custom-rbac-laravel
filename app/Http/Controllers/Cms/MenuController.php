@@ -368,7 +368,7 @@ class MenuController extends Controller
             if ($menu) {
                 $menu->parent_id = $parentId;
                 $menu->sort = $parentSort;
-                $menu->is_label = $menu->path == '#' ? $isLabel : 0;
+                // $menu->is_label = $menu->path == '#' ? $isLabel : 0;
                 $menu->save();
 
                 if (isset($item['children'])) {

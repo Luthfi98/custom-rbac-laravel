@@ -76,4 +76,14 @@ class GeneralHelper {
 
         // dd();
     }
+
+    function getSetting()
+    {
+        $settingPath = storage_path('settings.json');
+        $jsonContents = file_get_contents($settingPath);
+
+        // Decode the JSON content
+        $setting = json_decode($jsonContents);
+        return $setting;
+    }
 }
