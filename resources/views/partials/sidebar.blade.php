@@ -44,7 +44,7 @@
                             </a>
                             <ul aria-expanded="false">
                                 @foreach ($menu->child as $child)
-                                    <li><a href="{{ $child->path }}">{{ $child->name }}</a></li>
+                                    <li><a href="{{ $child->path == '#' ? '#' : route($child->path) }}">{{ $child->name }}</a></li>
                                 @endforeach
                             </ul>
                         </li>

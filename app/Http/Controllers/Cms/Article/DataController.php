@@ -9,6 +9,8 @@ use App\Models\CategoryArticle;
 use App\Models\TagArticle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+
 
 class DataController extends Controller
 {
@@ -22,7 +24,7 @@ class DataController extends Controller
      */
     public function index()
     {
-        $this->access->canAccess('data-article-read');
+        $this->access->canAccess('module-data-article-read');
 
         if(request()->ajax()) {
             $article = Article::select(
@@ -53,7 +55,7 @@ class DataController extends Controller
 
             if ($filter == 'trashed') {
                 $datatable->addColumn('select_checkbox', function ($row) {
-                    return '<input type="checkbox" class="selected" name="selected_products[]" value="' . $row->id . '">';
+                    return '<input type="checkbox" class="selected" name="selected_articles[]" value="' . $row->id . '">';
                 });
             }else{
                 $datatable->addColumn('action', function ($row) {
@@ -61,19 +63,19 @@ class DataController extends Controller
                     $delete = '';
                     $detail = '';
 
-                    if ($this->access->canAccess('data-article-detail', true)) {
+                    if ($this->access->canAccess('module-data-article-detail', true)) {
                         $detail .= '<a href="'.route('data-article.show', $row->id).'" class="btn btn-sm btn-info" data-toggle="tooltip" data-placement="top" title="Edit">
                                     <i class="fa-solid fa-eye"></i>
                                 </a>';
                     }
 
-                    if ($this->access->canAccess('data-article-update', true)) {
+                    if ($this->access->canAccess('module-data-article-update', true)) {
                         $edit .= '<a href="'.route('data-article.edit', $row->id).'" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit">
                                     <i class="fa-solid fa-pencil"></i>
                                 </a>';
                     }
 
-                    if ($this->access->canAccess('data-article-delete', true)) {
+                    if ($this->access->canAccess('module-data-article-delete', true)) {
                         $delete .= '<form id="delete-form-'.$row->id.'" action="'.route('data-article.destroy', $row->id).'" method="POST" style="display: none;">
                                     '.csrf_field().'
                                     '.method_field('DELETE').'
@@ -105,7 +107,7 @@ class DataController extends Controller
      */
     public function create()
     {
-        $this->access->canAccess('data-article-create');
+        $this->access->canAccess('module-data-article-create');
         $categories = CategoryArticle::with(['child'])
                     ->get();
         $tags = TagArticle::all();
@@ -124,43 +126,41 @@ class DataController extends Controller
      */
     public function store(Request $request)
     {
-        $this->access->canAccess('data-article-create');
+        $this->access->canAccess('module-data-article-create');
         $rules = [
             'name' => 'required|string|max:255',
             'content' => 'required|string',
-            'category_id' => 'required',
-            'brand_id' => 'required',
+            'category' => 'required',
+            'tags' => 'required|array',
             'status' => 'nullable',
             'image' => 'required|file|max:2048|mimes:jpeg,png,jpg,webp'
         ];
         $validator = Validator::make($request->all(), $rules);
-        // dd($request);
+        // dd($request, $validator->fails());
         if ($validator->fails()) {
             return redirect(route('data-article.create'))
                 ->withErrors($validator)
                 ->withInput();
         }
 
-        $product = new Article();
+        $article = new Article();
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/article/post/product'), $filename);
-            $fileUrl = 'uploads/article/post/product/' . $filename;
-            $product->image = $fileUrl;
+            $file->move(public_path('uploads/article/post/article'), $filename);
+            $fileUrl = 'uploads/article/post/article/' . $filename;
+            $article->image = $fileUrl;
         }
 
-        $product->name = $request->name;
-        $product->description = $request->description;
-        $product->price = $request->price;
-        $product->qty = $request->qty;
-        $product->category_id = $request->category_id;
-        $product->brand_id = $request->brand_id;
-        $product->unit_id = $request->unit_id;
-        $product->status = $request->status ? 'Active' : 'InActive' ;
-        // dd($product);
-        $product->save();
+        $article->name = $request->name;
+        $article->slug = Str::slug($request->name);
+        $article->content = $request->content;
+        $article->category_id = $request->category;
+        $article->tags = json_encode($request->tags);
+        $article->status = $request->status ? 'Active' : 'InActive' ;
+        // dd($article);
+        $article->save();
 
         session()->flash('success', 'Successfully Created Article');
 
@@ -172,11 +172,11 @@ class DataController extends Controller
      */
     public function show(string $id)
     {
-        $this->access->canAccess('data-article-read');
+        $this->access->canAccess('module-data-article-read');
 
         $data = [
             'title' => 'Detail Article',
-            'product' => Article::with(['category', 'brand', 'unit'])->withTrashed()->find($id),
+            'article' => Article::with(['category', 'brand', 'unit'])->withTrashed()->find($id),
         ];
 
         return view('cms.article.data.detail', $data);
@@ -187,7 +187,7 @@ class DataController extends Controller
      */
     public function edit(string $id)
     {
-        $this->access->canAccess('data-article-update');
+        $this->access->canAccess('module-data-article-update');
         $categories = PosCategory::with(['child.child'])
                     ->whereNull('parent_id')
                     ->get();
@@ -197,7 +197,7 @@ class DataController extends Controller
         $units = PosUnit::all();
         $data = [
             'title' => 'Edit Article',
-            'product' => Article::with(['category', 'brand', 'unit'])->find($id),
+            'article' => Article::with(['category', 'brand', 'unit'])->find($id),
             'categories' => $categories,
             'brands' => $brands,
             'units' => $units
@@ -211,7 +211,7 @@ class DataController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $this->access->canAccess('data-article-create');
+        $this->access->canAccess('module-data-article-create');
         $rules = [
             'name' => 'required|string|max:255',
             'description' => 'required|string',
@@ -230,32 +230,32 @@ class DataController extends Controller
                 ->withInput();
         }
 
-        $product = Article::find($id);
+        $article = Article::find($id);
 
         if ($request->hasFile('image')) {
-            if ($product->image) {
-                $oldFilePath = public_path($product->image);
+            if ($article->image) {
+                $oldFilePath = public_path($article->image);
                 if (file_exists($oldFilePath)) {
                     unlink($oldFilePath);
                 }
             }
             $file = $request->file('image');
             $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/article/post/product'), $filename);
-            $fileUrl = 'uploads/article/post/product/' . $filename;
-            $product->image = $fileUrl;
+            $file->move(public_path('uploads/article/post/article'), $filename);
+            $fileUrl = 'uploads/article/post/article/' . $filename;
+            $article->image = $fileUrl;
         }
 
-        $product->name = $request->name;
-        $product->description = $request->description;
-        $product->price = $request->price;
-        $product->qty = $request->qty;
-        $product->category_id = $request->category_id;
-        $product->brand_id = $request->brand_id;
-        $product->unit_id = $request->unit_id;
-        $product->status = $request->status ? 'Active' : 'InActive' ;
-        // dd($product);
-        $product->save();
+        $article->name = $request->name;
+        $article->description = $request->description;
+        $article->price = $request->price;
+        $article->qty = $request->qty;
+        $article->category_id = $request->category_id;
+        $article->brand_id = $request->brand_id;
+        $article->unit_id = $request->unit_id;
+        $article->status = $request->status ? 'Active' : 'InActive' ;
+        // dd($article);
+        $article->save();
 
         session()->flash('success', 'Successfully Updated Article');
 
@@ -267,9 +267,9 @@ class DataController extends Controller
      */
     public function destroy(string $id)
     {
-        $this->access->canAccess('data-article-delete');
-        $product = Article::find($id);
-        $product->delete();
+        $this->access->canAccess('module-data-article-delete');
+        $article = Article::find($id);
+        $article->delete();
 
         session()->flash('success', 'Successfully Deleted Article');
 

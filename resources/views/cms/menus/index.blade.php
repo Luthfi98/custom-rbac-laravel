@@ -15,7 +15,7 @@
                                 <!-- Add your buttons here -->
                             </div>
                             <div>
-                                @if ($general->canAccess('menu-create', true))
+                                @if ($general->canAccess('module-menu-create', true))
                                     <a href="{{ route('menus.create') }}" class="btn btn-primary btn-sm" title="Create"><span class="fa fa-plus"></span> {{__("Add Menu")}}</a>
                                 @endif
                             </div>

@@ -25,7 +25,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $this->access->canAccess('role-read');
+        $this->access->canAccess('module-role-read');
 
         if(request()->ajax()) {
 
@@ -34,19 +34,19 @@ class RoleController extends Controller
                 $edit = '';
                 $delete = '';
                 $access = '';
-                if ($this->access->canAccess('role-access', true)) {
+                if ($this->access->canAccess('module-role-access', true)) {
                     $access .= '<a href="/cms/roles/permission/'.$row->id.'" class="btn btn-sm btn-info" data-toggle="tooltip" data-placement="top" title="Permission">
                                 <i class="fa-solid fa-wrench"></i>
                             </a>';
                 }
 
-                if ($this->access->canAccess('role-update', true)) {
+                if ($this->access->canAccess('module-role-update', true)) {
                     $edit .= '<a href="'.route('roles.edit', $row->id).'" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit">
                                 <i class="fa-solid fa-pencil"></i>
                             </a>';
                 }
 
-                if ($this->access->canAccess('role-delete', true)) {
+                if ($this->access->canAccess('module-role-delete', true)) {
                     $delete .= '<form id="delete-form-'.$row->id.'" action="'.route('roles.destroy', $row->id).'" method="POST" style="display: none;">
                                 '.csrf_field().'
                                 '.method_field('DELETE').'
@@ -77,7 +77,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $this->access->canAccess('role-create');
+        $this->access->canAccess('module-role-create');
 
         $data = ['title' => 'Create Role'];
         return view('cms.roles.create', $data);
@@ -88,7 +88,7 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        $this->access->canAccess('role-create');
+        $this->access->canAccess('module-role-create');
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -115,7 +115,7 @@ class RoleController extends Controller
      */
     public function show(string $id)
     {
-        $this->access->canAccess('role-detail');
+        $this->access->canAccess('module-role-detail');
 
     }
 
@@ -124,7 +124,7 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
-        $this->access->canAccess('role-update');
+        $this->access->canAccess('module-role-update');
 
         $data = [
             'title' => 'Edit Role',
@@ -139,7 +139,7 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
-        $this->access->canAccess('role-update');
+        $this->access->canAccess('module-role-update');
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -164,7 +164,7 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        $this->access->canAccess('role-delete');
+        $this->access->canAccess('module-role-delete');
 
         $role->delete();
         session()->flash('success', 'Successfully Deleted Role');
@@ -173,7 +173,7 @@ class RoleController extends Controller
     }
     public function permission($id)
     {
-        $this->access->canAccess('role-access');
+        $this->access->canAccess('module-role-access');
 
         $role = Role::with(['permissions', 'users'])->find($id);
         $permissions = $menus = Menu::with([
@@ -204,7 +204,7 @@ class RoleController extends Controller
 
     function storePermission(Request $request)
     {
-        $this->access->canAccess('role-access');
+        $this->access->canAccess('module-role-access');
 
         $validator = Validator::make($request->all(), [
             'permissions' => 'required|array',

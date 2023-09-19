@@ -9,7 +9,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <form method="POST" action="{{ route('categories.store') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('article-category.store') }}" enctype="multipart/form-data">
                         @csrf
 
                         <div class="form-group mt-3">
@@ -52,7 +52,7 @@
 
 
                         <div class="mt-3">
-                            <a href="{{ route('categories.index') }}" class="btn btn-secondary">{{ __('Back') }}</a>
+                            <a href="{{ route('article-category.index') }}" class="btn btn-secondary">{{ __('Back') }}</a>
                             <button type="submit" class="btn btn-primary">{{__('Create')}}</button>
                         </div>
                     </form>

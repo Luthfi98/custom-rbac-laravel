@@ -15,7 +15,7 @@
                                 <!-- Add your buttons here -->
                             </div>
                             <div>
-                                @if ($general->canAccess('role-create', true))
+                                @if ($general->canAccess('module-role-create', true))
                                     <a href="{{ route('roles.create') }}" class="btn btn-primary btn-sm" title="Create"><span class="fa fa-plus"></span> {{__("Add Role")}}</a>
                                 @endif
                             </div>

@@ -9,7 +9,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <form method="POST" action="{{ route('categories-article.update', $category->id) }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('article-category.update', $category->id) }}" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="form-group mt-3">
@@ -52,7 +52,7 @@
 
 
                         <div class="mt-3">
-                            <a href="{{ route('categories-article.index') }}" class="btn btn-secondary">{{ __('Back') }}</a>
+                            <a href="{{ route('article-category.index') }}" class="btn btn-secondary">{{ __('Back') }}</a>
                             <button type="submit" class="btn btn-primary">{{__('Update')}}</button>
                         </div>
                     </form>

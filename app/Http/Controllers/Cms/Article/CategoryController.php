@@ -22,7 +22,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $this->access->canAccess('category-article-show');
+        $this->access->canAccess('module-category-article-show');
         if(request()->ajax()) {
 
             return datatables()->of(CategoryArticle::select('category_articles.*', 'parent.name as parent_name')
@@ -30,14 +30,14 @@ class CategoryController extends Controller
             ->addColumn('action', function ($row) {
                 $edit = '';
                 $delete = '';
-                if ($this->access->canAccess('category-article-update', true)) {
-                    $edit .= '<a href="'.route('categories-article.edit', $row->id).'" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit">
+                if ($this->access->canAccess('module-category-article-update', true)) {
+                    $edit .= '<a href="'.route('article-category.edit', $row->id).'" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit">
                                 <i class="fa-solid fa-pencil"></i>
                             </a>';
                 }
 
-                if ($this->access->canAccess('category-article-delete', true)) {
-                    $delete .= '<form id="delete-form-'.$row->id.'" action="'.route('categories-article.destroy', $row->id).'" method="POST" style="display: none;">
+                if ($this->access->canAccess('module-category-article-delete', true)) {
+                    $delete .= '<form id="delete-form-'.$row->id.'" action="'.route('article-category.destroy', $row->id).'" method="POST" style="display: none;">
                                 '.csrf_field().'
                                 '.method_field('DELETE').'
                             </form>
@@ -70,7 +70,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        $this->access->canAccess('category-article-create');
+        $this->access->canAccess('module-category-article-create');
         $parents = CategoryArticle::with([
         'child' => function ($query) {
             $query->with(['child' => function($subQuery) {
@@ -92,7 +92,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $this->access->canAccess('category-article-create');
+        $this->access->canAccess('module-category-article-create');
         $rules = [
             'name' => 'required|string|max:255',
         ];
@@ -104,7 +104,7 @@ class CategoryController extends Controller
             ];
         }
         if ($validator->fails()) {
-            return redirect(route('categories-article.create'))
+            return redirect(route('article-category.create'))
                 ->withErrors($validator)
                 ->withInput();
         }
@@ -126,7 +126,7 @@ class CategoryController extends Controller
 
         session()->flash('success', 'Successfully Created Category Article');
 
-        return redirect(route('categories-article.index'));
+        return redirect(route('article-category.index'));
     }
 
     /**
@@ -142,7 +142,7 @@ class CategoryController extends Controller
      */
     public function edit(string $id)
     {
-        $this->access->canAccess('category-article-create');
+        $this->access->canAccess('module-category-article-create');
         $parents = CategoryArticle::with([
         'child' => function ($query) {
             $query->with(['child' => function($subQuery) {
@@ -166,7 +166,7 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $this->access->canAccess('category-article-update');
+        $this->access->canAccess('module-category-article-update');
 
         $rules = [
             'name' => 'required|string|max:255',
@@ -179,7 +179,7 @@ class CategoryController extends Controller
         }
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
-            return redirect(route('categories-article.edit', $id))
+            return redirect(route('article-category.edit', $id))
                 ->withErrors($validator)
                 ->withInput();
         }
@@ -206,7 +206,7 @@ class CategoryController extends Controller
 
         session()->flash('success', 'Successfully Updated Category Article');
 
-        return redirect(route('categories-article.index'));
+        return redirect(route('article-category.index'));
     }
 
     /**
@@ -214,12 +214,12 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        $this->access->canAccess('category-article-delete');
+        $this->access->canAccess('module-category-article-delete');
         $category = CategoryArticle::find($id);
 
         $category->delete();
         session()->flash('success', 'Successfully Deleted Category Article');
 
-        return redirect(route('categories-article.index'));
+        return redirect(route('article-category.index'));
     }
 }

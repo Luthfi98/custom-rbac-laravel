@@ -20,7 +20,7 @@
                             <li class="nav-item">
                                 <a class="nav-link" data-bs-toggle="tab" onclick="changeTab('inactive')" href="#inactive"><i class="la la-times me-2"></i> Inactive Article</a>
                             </li>
-                            @if ($general->canAccess('data-article-trash', true))
+                            @if ($general->canAccess('module-data-article-trash', true))
                                 <li class="nav-item">
                                     <a class="nav-link" data-bs-toggle="tab" onclick="changeTab('trashed')" href="#trashed"><i class="la la-trash me-2"></i> Trashed Article</a>
                                 </li>
@@ -35,7 +35,7 @@
 
                                             </div>
                                             <div>
-                                                @if ($general->canAccess('data-article-create', true))
+                                                @if ($general->canAccess('module-data-article-create', true))
                                                     <a href="{{ route('data-article.create') }}" class="btn btn-primary btn-sm" title="Create"><span class="fa fa-plus"></span> {{__("Add Article")}}</a>
                                                 @endif
                                             </div>
@@ -67,7 +67,7 @@
 
                                             </div>
                                             <div>
-                                                @if ($general->canAccess('data-article-create', true))
+                                                @if ($general->canAccess('module-data-article-create', true))
                                                     <a href="{{ route('data-article.create') }}" class="btn btn-primary btn-sm" title="Create"><span class="fa fa-plus"></span> {{__("Add Article")}}</a>
                                                 @endif
                                             </div>
@@ -99,7 +99,7 @@
 
                                             </div>
                                             <div>
-                                                @if ($general->canAccess('data-article-create', true))
+                                                @if ($general->canAccess('module-data-article-create', true))
                                                     <a href="{{ route('data-article.create') }}" class="btn btn-primary btn-sm" title="Create"><span class="fa fa-plus"></span> {{__("Add Article")}}</a>
                                                 @endif
                                             </div>
@@ -123,7 +123,7 @@
                                     </div>
                                 </div>
                             </div>
-                            @if ($general->canAccess('data-article-trash', true))
+                            @if ($general->canAccess('module-data-article-trash', true))
                                 <div class="tab-pane fade" id="trashed">
                                     <div class="pt-4">
                                         <div class="table-responsive">
@@ -132,13 +132,13 @@
 
                                                 </div>
                                                 <div>
-                                                    @if ($general->canAccess('data-article-create', true))
+                                                    @if ($general->canAccess('module-data-article-create', true))
                                                         <a href="{{ route('data-article.create') }}" class="btn btn-primary btn-sm" title="Create"><span class="fa fa-plus"></span> {{__("Add Article")}}</a>
                                                     @endif
-                                                    @if ($general->canAccess('data-article-restore', true))
+                                                    @if ($general->canAccess('module-data-article-restore', true))
                                                         <a href="#" class="btn btn-success btn-sm proccess" data-type="restore" title="Restore"><span class="fa fa-trash-arrow-up"></span> {{__("Restore Selected Data")}}</a>
                                                     @endif
-                                                    @if ($general->canAccess('data-article-delete', true))
+                                                    @if ($general->canAccess('module-data-article-delete', true))
                                                         <a href="#" class="btn btn-danger btn-sm proccess" data-type="delete" title="Delete"><span class="fa fa-times"></span> {{__("Delete Selected Data")}}</a>
                                                     @endif
                                                 </div>

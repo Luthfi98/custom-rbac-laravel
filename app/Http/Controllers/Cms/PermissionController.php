@@ -20,10 +20,10 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        $this->access->canAccess('permission-show');
+        $this->access->canAccess('module-permission-show');
 
         if(request()->ajax()) {
-            $this->access->canAccess('permission-read');
+            $this->access->canAccess('module-permission-read');
             $permission = Permission::select('*');
             if (request()->has('menu_id')) {
                 $menuId = request()->input('menu_id');
@@ -38,13 +38,13 @@ class PermissionController extends Controller
                 $edit = '';
                 $delete = '';
 
-                if($this->access->canAccess('permission-update', true))
+                if($this->access->canAccess('module-permission-update', true))
                 {
                     $edit .= '<a href="'.route('permissions.edit', $row->id).'" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit">
                                 <i class="fa-solid fa-pencil"></i>
                             </a>';
                 }
-                if($this->access->canAccess('permission-delete', true))
+                if($this->access->canAccess('module-permission-delete', true))
                 {
                     $delete .=  '<form id="delete-form-'.$row->id.'" action="'.route('permissions.destroy', $row->id).'" method="POST" style="display: none;">
                                     '.csrf_field().'

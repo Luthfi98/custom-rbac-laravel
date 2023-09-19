@@ -29,7 +29,7 @@ class MenuController extends Controller
      */
     public function index()
     {
-        $this->access->canAccess('menu-show');
+        $this->access->canAccess('module-menu-show');
         if(request()->ajax()) {
 
             return datatables()->of(Menu::select('menus.*', 'parent.name as parent_name')
@@ -37,13 +37,13 @@ class MenuController extends Controller
             ->addColumn('action', function ($row) {
                 $edit = '';
                 $delete = '';
-                if ($this->access->canAccess('menu-update', true)) {
+                if ($this->access->canAccess('module-menu-update', true)) {
                     $edit .= '<a href="'.route('menus.edit', $row->id).'" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit">
                                 <i class="fa-solid fa-pencil"></i>
                             </a>';
                 }
 
-                if ($this->access->canAccess('menu-delete', true)) {
+                if ($this->access->canAccess('module-menu-delete', true)) {
                     $delete .= '<form id="delete-form-'.$row->id.'" action="'.route('menus.destroy', $row->id).'" method="POST" style="display: none;">
                                 '.csrf_field().'
                                 '.method_field('DELETE').'
@@ -74,7 +74,7 @@ class MenuController extends Controller
      */
     public function create()
     {
-        $this->access->canAccess('menu-create');
+        $this->access->canAccess('module-menu-create');
         $parents = Menu::with([
         'child' => function ($query) {
             $query->with(['child' => function($subQuery) {
@@ -96,7 +96,7 @@ class MenuController extends Controller
      */
     public function store(Request $request)
     {
-        $this->access->canAccess('menu-create');
+        $this->access->canAccess('module-menu-create');
         $validator = Validator::make($request->all(), [
             'parent' => 'nullable', // Add your validation rules
             'name' => 'required|string|max:100',
@@ -141,7 +141,7 @@ class MenuController extends Controller
      */
     public function show(string $id)
     {
-        $this->access->canAccess('menu-detail');
+        $this->access->canAccess('module-menu-detail');
 
     }
 
@@ -150,7 +150,7 @@ class MenuController extends Controller
      */
     public function edit(Menu $menu)
     {
-        $this->access->canAccess('menu-update');
+        $this->access->canAccess('module-menu-update');
 
         $data = [
             'title' => 'Create Menu',
@@ -166,7 +166,7 @@ class MenuController extends Controller
      */
     public function update(Request $request, Menu $menu)
     {
-        $this->access->canAccess('menu-update');
+        $this->access->canAccess('module-menu-update');
 
         $validator = Validator::make($request->all(), [
             'parent' => 'nullable', // Add your validation rules
@@ -191,11 +191,11 @@ class MenuController extends Controller
 
         $menu->parent_id = $request->parent;
         $menu->name = $request->name;
+        $menu->module = $request->module;
         $menu->path = $request->path;
         $menu->icon = $request->icon;
         $menu->type = $request->type;
         $menu->is_label = $request->is_label ? 1 : 0;
-
 
         $menu->save();
 
@@ -212,7 +212,7 @@ class MenuController extends Controller
      */
     public function destroy(Menu $menu)
     {
-        $this->access->canAccess('menu-delete');
+        $this->access->canAccess('module-menu-delete');
 
         $menu->delete();
         session()->flash('success', 'Successfully Deleted Menu');
@@ -229,8 +229,8 @@ class MenuController extends Controller
         $newPermissions = [];
         $nameBefore = [];
         foreach ($permissions as $value) {
-            $permissionName = $prefix . '-' . Str::slug($value);
-            $nameBefore[] = Str::slug($menu->name.'-'.$value);
+            $permissionName = $menu->module . '-' . Str::slug($value);
+            $nameBefore[] = Str::slug($menu->module.'-'.$value);
 
             if (in_array($permissionName, $existingPermissions)) {
                 // Update existing permission
@@ -250,7 +250,7 @@ class MenuController extends Controller
 
         // Delete outdated permissions
         $permissionsToDelete = array_diff($existingPermissions, $nameBefore);
-        // dd($permissionsToDelete, $nameBefore);
+        // dd($permissionsToDelete, $nameBefore, $menu);
         Permission::whereIn('name', $permissionsToDelete)->delete();
 
         return true;
@@ -326,7 +326,7 @@ class MenuController extends Controller
 
     public function sorting()
     {
-        $this->access->canAccess('sorting-menu-show');
+        $this->access->canAccess('module-sorting-menu-show');
         $menus = Menu::with([
             'child' => function ($query) {
                 $query->with(['child' => function($subQuery) {
@@ -349,7 +349,7 @@ class MenuController extends Controller
 
     public function storeSorting(Request $request)
     {
-        $this->access->canAccess('sorting-menu-update');
+        $this->access->canAccess('module-sorting-menu-update');
         // dd($request->data);
         $this->updateSorting($request->data);
         $response = [

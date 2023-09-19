@@ -25,7 +25,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $this->access->canAccess('user-read');
+        $this->access->canAccess('module-user-read');
 
         if (request()->ajax()) {
             $users = User::all();
@@ -34,13 +34,13 @@ class UserController extends Controller
                 $edit = '';
                 $delete = '';
 
-                if($this->access->canAccess('user-update'))
+                if($this->access->canAccess('module-user-update'))
                 {
                     $edit .= '<a href="'.route('users.edit', $row->id).'" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit">
                                 <i class="fa-solid fa-pencil"></i>
                             </a>';
                 }
-                if($this->access->canAccess('user-delete'))
+                if($this->access->canAccess('module-user-delete'))
                 {
                     $delete .=  '<form id="delete-form-'.$row->id.'" action="'.route('users.destroy', $row->id).'" method="POST" style="display: none;">
                                     '.csrf_field().'
@@ -77,7 +77,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $this->access->canAccess('user-create');
+        $this->access->canAccess('module-user-create');
 
         $roles = Role::all();
 
@@ -95,7 +95,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $this->access->canAccess('user-create');
+        $this->access->canAccess('module-user-create');
         $validator = Validator::make($request->all(), [
             'fullname' => 'required|string|max:255',
             'username' => 'required|string|max:25|'.Rule::unique('users', 'username'),
@@ -137,7 +137,7 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        $this->access->canAccess('user-detail');
+        $this->access->canAccess('module-user-detail');
     }
 
     /**
@@ -145,7 +145,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $this->access->canAccess('user-update');
+        $this->access->canAccess('module-user-update');
         $roles = Role::all();
 
         $data = [
@@ -164,7 +164,7 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $this->access->canAccess('user-update');
+        $this->access->canAccess('module-user-update');
         $rules = [
             'fullname' => 'required|string|max:255',
             'username' => 'required|string|max:25|'.Rule::unique('users', 'username')->ignore($user->id),
@@ -219,7 +219,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $this->access->canAccess('user-delete');
+        $this->access->canAccess('module-user-delete');
 
         $user->delete();
         session()->flash('success', 'Successfully Deleted User');

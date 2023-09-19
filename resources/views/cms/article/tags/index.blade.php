@@ -15,8 +15,8 @@
                                 <!-- Add your buttons here -->
                             </div>
                             <div>
-                                @if ($general->canAccess('tags-article-create', true))
-                                    <a href="{{ route('tags-article.create') }}" class="btn btn-primary btn-sm" title="Create"><span class="fa fa-plus"></span> {{__("Add Tag")}}</a>
+                                @if ($general->canAccess('module-tag-article-create', true))
+                                    <a href="{{ route('article-tag.create') }}" class="btn btn-primary btn-sm" title="Create"><span class="fa fa-plus"></span> {{__("Add Tag")}}</a>
                                 @endif
                             </div>
                         </div>
@@ -54,7 +54,7 @@
       var table = $('#data-table').DataTable({
           processing: true,
           serverSide: true,
-          ajax: "{{ route('tags-article.index') }}",
+          ajax: "{{ route('article-tag.index') }}",
           columns: [
               {
             data: 'id',

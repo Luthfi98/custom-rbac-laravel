@@ -110,7 +110,7 @@
                                 <option value="" disabled>Select Permissions</option>
                                 @foreach ($listAccess as $access)
                                 @php
-                                    $selected = $menu->permissions->contains('name', Str::slug($menu->name.'-'.$access)) ? 'selected' : '';
+                                    $selected = $menu->permissions->contains('name', Str::slug($menu->module.'-'.$access)) ? 'selected' : '';
                                 @endphp
 
                                 <option value="{{ $access }}" {{ $selected }}>{{ $access }}</option>

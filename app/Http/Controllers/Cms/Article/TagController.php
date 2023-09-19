@@ -24,7 +24,7 @@ class TagController extends Controller
      */
     public function index()
     {
-        $this->access->canAccess('tags-article-read');
+        $this->access->canAccess('module-tag-article-show');
 
         if(request()->ajax()) {
 
@@ -33,14 +33,14 @@ class TagController extends Controller
                 $edit = '';
                 $delete = '';
 
-                if ($this->access->canAccess('tags-article-update', true)) {
-                    $edit .= '<a href="'.route('tags-article.edit', $row->id).'" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit">
+                if ($this->access->canAccess('module-tag-article-update', true)) {
+                    $edit .= '<a href="'.route('article-tag.edit', $row->id).'" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit">
                                 <i class="fa-solid fa-pencil"></i>
                             </a>';
                 }
 
-                if ($this->access->canAccess('tags-article-delete', true)) {
-                    $delete .= '<form id="delete-form-'.$row->id.'" action="'.route('tags-article.destroy', $row->id).'" method="POST" style="display: none;">
+                if ($this->access->canAccess('module-tag-article-delete', true)) {
+                    $delete .= '<form id="delete-form-'.$row->id.'" action="'.route('article-tag.destroy', $row->id).'" method="POST" style="display: none;">
                                 '.csrf_field().'
                                 '.method_field('DELETE').'
                             </form>
@@ -70,7 +70,7 @@ class TagController extends Controller
      */
     public function create()
     {
-        $this->access->canAccess('tags-article-create');
+        $this->access->canAccess('module-tag-article-create');
 
         $data = ['title' => 'Create Tag'];
         return view('cms.article.tags.create', $data);
@@ -81,13 +81,13 @@ class TagController extends Controller
      */
     public function store(Request $request)
     {
-        $this->access->canAccess('tags-article-create');
+        $this->access->canAccess('module-tag-article-create');
         $rules = [
             'name' => 'required|string|max:255|'.Rule::unique('tag_articles', 'name'),
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
-            return redirect(route('tags-article.create'))
+            return redirect(route('article-tag.create'))
                 ->withErrors($validator)
                 ->withInput();
         }
@@ -98,7 +98,7 @@ class TagController extends Controller
 
         session()->flash('success', 'Successfully Created Tag');
 
-        return redirect(route('tags-article.index'));
+        return redirect(route('article-tag.index'));
     }
 
     /**
@@ -106,7 +106,7 @@ class TagController extends Controller
      */
     public function show(string $id)
     {
-        $this->access->canAccess('tags-article-detail');
+        $this->access->canAccess('module-tag-article-detail');
 
     }
 
@@ -115,7 +115,7 @@ class TagController extends Controller
      */
     public function edit(string $id)
     {
-        $this->access->canAccess('tags-article-update');
+        $this->access->canAccess('module-tag-article-update');
         $tag = TagArticle::find($id);
 
         $data = [
@@ -131,7 +131,7 @@ class TagController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $this->access->canAccess('tags-article-update');
+        $this->access->canAccess('module-tag-article-update');
 
         $rules = [
             'name' => 'required|string|max:255|'.Rule::unique('tag_articles', 'name')->ignore($id),
@@ -139,7 +139,7 @@ class TagController extends Controller
 
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
-            return redirect(route('tags-article.edit', $id))
+            return redirect(route('article-tag.edit', $id))
                 ->withErrors($validator)
                 ->withInput();
         }
@@ -150,7 +150,7 @@ class TagController extends Controller
 
         session()->flash('success', 'Successfully Updated Tag');
 
-        return redirect(route('tags-article.index'));
+        return redirect(route('article-tag.index'));
     }
 
     /**
@@ -158,12 +158,12 @@ class TagController extends Controller
      */
     public function destroy(string $id)
     {
-        $this->access->canAccess('tags-article-delete');
+        $this->access->canAccess('module-tag-article-delete');
         $tag = TagArticle::find($id);
 
         $tag->delete();
         session()->flash('success', 'Successfully Deleted Tag');
 
-        return redirect(route('tags-article.index'));
+        return redirect(route('article-tag.index'));
     }
 }

@@ -52,8 +52,8 @@ Route::prefix('cms')->middleware('auth')->group(function(){
     Route::post('profile/change/{any}', [ProfileController::class, 'change'])->name('profile.change');
 
     Route::prefix('article')->group(function(){
-        Route::resource('categories-article', ArticleCategoryController::class);
-        Route::resource('tags-article', ArticleTagController::class);
+        Route::resource('article-category', ArticleCategoryController::class);
+        Route::resource('article-tag', ArticleTagController::class);
         Route::post('data-article/trashed', [ArticleDataController::class, 'storeTrashed'])->name('data-article.trashed.store');
         Route::resource('data-article', ArticleDataController::class);
     });

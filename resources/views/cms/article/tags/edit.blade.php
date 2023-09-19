@@ -9,7 +9,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <form method="POST" action="{{ route('tags-article.update', $tag->id) }}" >
+                    <form method="POST" action="{{ route('article-tag.update', $tag->id) }}" >
                         @csrf
                         @method('PUT')
 
@@ -22,7 +22,7 @@
                         </div>
 
                         <div class="mt-3">
-                            <a href="{{ route('tags-article.index') }}" class="btn btn-secondary">{{ __('Back') }}</a>
+                            <a href="{{ route('article-tag.index') }}" class="btn btn-secondary">{{ __('Back') }}</a>
                             <button type="submit" class="btn btn-primary">{{__('Update')}}</button>
                         </div>
                     </form>
