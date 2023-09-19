@@ -121,7 +121,7 @@ class CategoryController extends Controller
 
         $category->name = $request->name;
         $category->slug =  Str::slug($request->name);
-        $category->parent_id = $request->parent_id;
+        $category->parent_id = $request->parent;
         $category->save();
 
         session()->flash('success', 'Successfully Created Category Article');
@@ -201,7 +201,7 @@ class CategoryController extends Controller
 
         $category->name = $request->name;
         $category->slug =  Str::slug($request->name);
-        $category->parent_id = $request->parent_id;
+        $category->parent_id = $request->parent;
         $category->save();
 
         session()->flash('success', 'Successfully Updated Category Article');

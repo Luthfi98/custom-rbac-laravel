@@ -7,7 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\CategoryArticle;
 use App\Models\TagArticle;
+use App\Models\TagingArticle;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -38,11 +40,11 @@ class DataController extends Controller
                     case 'trashed':
                         $article->onlyTrashed();
                         break;
-                    case 'active':
-                        $article->where('articles.status', 'Active');
+                    case 'published':
+                        $article->where('articles.status', ucfirst($filter));
                         break;
-                    case 'inactive':
-                        $article->where('articles.status', 'InActive');
+                    case 'unpublished':
+                        $article->where('articles.status', ucfirst($filter));
                         break;
                     default:
                         break;
@@ -62,7 +64,13 @@ class DataController extends Controller
                     $edit = '';
                     $delete = '';
                     $detail = '';
+                    $published = '';
+                    $unpublished = '';
+                    if ($this->access->canAccess('module-data-article-published', true)) {
 
+                    }
+                    if ($this->access->canAccess('module-data-article-unpublished', true)) {
+                    }
                     if ($this->access->canAccess('module-data-article-detail', true)) {
                         $detail .= '<a href="'.route('data-article.show', $row->id).'" class="btn btn-sm btn-info" data-toggle="tooltip" data-placement="top" title="Edit">
                                     <i class="fa-solid fa-eye"></i>
@@ -153,19 +161,24 @@ class DataController extends Controller
             $article->image = $fileUrl;
         }
 
-        $article->name = $request->name;
+        $article->title = $request->name;
         $article->slug = Str::slug($request->name);
         $article->content = $request->content;
-        $article->category_id = $request->category;
-        $article->tags = json_encode($request->tags);
-        $article->status = $request->status ? 'Active' : 'InActive' ;
+        $article->category_article_id = $request->category;
+        $article->created_by = Auth::user()->id;
+        // $article->tags = json_encode($request->tags);
+        $article->status = $request->status ? 'Published' : 'Unpublished' ;
         // dd($article);
         $article->save();
+        $request['id'] = $article->id;
+        $this->tagging($request);
 
         session()->flash('success', 'Successfully Created Article');
 
         return redirect(route('data-article.index'));
     }
+
+
 
     /**
      * Display the specified resource.
@@ -176,7 +189,9 @@ class DataController extends Controller
 
         $data = [
             'title' => 'Detail Article',
-            'article' => Article::with(['category', 'brand', 'unit'])->withTrashed()->find($id),
+            'article' => Article::with(['category', 'editor', 'creator', 'publisher' ,'tag' => function($query){
+                $query->join('tag_articles', 'taging_articles.tag_article_id', '=', 'tag_articles.id');
+            }])->find($id),
         ];
 
         return view('cms.article.data.detail', $data);
@@ -188,19 +203,16 @@ class DataController extends Controller
     public function edit(string $id)
     {
         $this->access->canAccess('module-data-article-update');
-        $categories = PosCategory::with(['child.child'])
-                    ->whereNull('parent_id')
-                    ->get();
-        $brands = PosBrand::with(['child.child'])
-                    ->whereNull('parent_id')
-                    ->get();
-        $units = PosUnit::all();
+        $categories = CategoryArticle::with(['child'])
+        ->get();
+        $tags = TagArticle::all();
         $data = [
             'title' => 'Edit Article',
-            'article' => Article::with(['category', 'brand', 'unit'])->find($id),
+            'article' => Article::with(['category', 'tag' => function($query){
+                $query->join('tag_articles', 'taging_articles.tag_article_id', '=', 'tag_articles.id');
+            }])->find($id),
             'categories' => $categories,
-            'brands' => $brands,
-            'units' => $units
+            'tags' => $tags,
         ];
 
         return view('cms.article.data.edit', $data);
@@ -214,12 +226,9 @@ class DataController extends Controller
         $this->access->canAccess('module-data-article-create');
         $rules = [
             'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'qty' => 'required|numeric',
-            'price' => 'required|numeric',
-            'unit_id' => 'required',
-            'category_id' => 'required',
-            'brand_id' => 'required',
+            'content' => 'required|string',
+            'category' => 'required',
+            'tags' => 'required|array',
             'status' => 'nullable',
             'image' => 'file|max:2048|mimes:jpeg,png,jpg,webp'
         ];
@@ -246,16 +255,17 @@ class DataController extends Controller
             $article->image = $fileUrl;
         }
 
-        $article->name = $request->name;
-        $article->description = $request->description;
-        $article->price = $request->price;
-        $article->qty = $request->qty;
-        $article->category_id = $request->category_id;
-        $article->brand_id = $request->brand_id;
-        $article->unit_id = $request->unit_id;
-        $article->status = $request->status ? 'Active' : 'InActive' ;
+        $article->title = $request->name;
+        $article->slug = Str::slug($request->name);
+        $article->content = $request->content;
+        $article->category_article_id = $request->category;
+        $article->updated_by = Auth::user()->id;
+        // $article->tags = json_encode($request->tags);
+        $article->status = $request->status ? 'Published' : 'Unpublished' ;
         // dd($article);
         $article->save();
+        $request['id'] = $article->id;
+        $this->tagging($request);
 
         session()->flash('success', 'Successfully Updated Article');
 
@@ -274,5 +284,39 @@ class DataController extends Controller
         session()->flash('success', 'Successfully Deleted Article');
 
         return redirect(route('data-article.index'));
+    }
+
+    private function tagging($request){
+        $tags = $request->tags;
+        foreach ($tags as $key => $value) {
+            $rolePermission = TagingArticle::where(['article_id' => $request->id, 'tag_article_id' => $value])->first();
+
+            if (!$rolePermission) {
+                $rolePermission = new TagingArticle();
+                $rolePermission->article_id = $request->id;
+                $rolePermission->tag_article_id = $value;
+                $rolePermission->save();
+            }
+        }
+
+        TagingArticle::where('article_id', $request->id)
+            ->whereNotIn('tag_article_id', $tags)
+            ->delete();
+        return true;
+    }
+
+    function uploadFile(Request $request)
+    {
+        if ($request->hasFile('upload')) {
+            $originName = $request->file('upload')->getClientOriginalName();
+            $fileName = pathinfo($originName, PATHINFO_FILENAME);
+            $extension = $request->file('upload')->getClientOriginalExtension();
+            $fileName = $fileName . '_' . time() . '.' . $extension;
+
+            $request->file('upload')->move(public_path('uploads/article/post'), $fileName);
+
+            $url = asset('uploads/article/post/' . $fileName);
+            return response()->json(['fileName' => $fileName, 'uploaded'=> 1, 'url' => $url]);
+        }
     }
 }

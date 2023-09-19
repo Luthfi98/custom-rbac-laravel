@@ -12,7 +12,7 @@
                         @csrf
                         <div class="row">
                             <div class="col-12 mt-3">
-                                <label for="name">Name :</label>
+                                <label for="name">Ttile :</label>
                                 <input type="text" name="name" id="name" value="" class="form-control">
                                 @error('name')
                                     <div class="text-danger">{{ $message }}</div>
@@ -109,19 +109,19 @@
 
     ClassicEditor
     .create( document.querySelector( '#content' ), {
-        toolbar: {
-            items: [
-                'heading',
-                'bold',
-                'italic',
-                'link',
-                'bulletedList',
-                'numberedList',
-                'blockQuote',
-                'undo',
-                'redo'
-            ]
-        },
+        toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'imageUpload'],
+        ckfinder: {
+                    uploadUrl: '{{route('data-article.upload').'?_token='.csrf_token()}}',
+        }
+        // image: {
+        //     upload: {
+        //         types: ['jpeg', 'jpg', 'png', 'gif'],
+        //         url: "{{ route('data-article.upload') }}",
+        //         headers: {
+        //             'X-CSRF-TOKEN': "{{ csrf_token() }}" // Gantilah ini dengan token CSRF yang sesuai
+        //         }
+        //     }
+        // }
     } )
     .then( editor => {
         window.editor = editor;

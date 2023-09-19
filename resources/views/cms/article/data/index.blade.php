@@ -15,14 +15,14 @@
                                 <a class="nav-link active" onclick="changeTab('all')" data-bs-toggle="tab" href="#all"><i class="la la-list me-2"></i> All Article</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" data-bs-toggle="tab" onclick="changeTab('active')" href="#active"><i class="la la-check me-2"></i> Active Article</a>
+                                <a class="nav-link text-success" data-bs-toggle="tab" onclick="changeTab('published')" href="#published"><i class="la la-check me-2 text-success"></i> Published Article</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" data-bs-toggle="tab" onclick="changeTab('inactive')" href="#inactive"><i class="la la-times me-2"></i> Inactive Article</a>
+                                <a class="nav-link text-warning" data-bs-toggle="tab" onclick="changeTab('unpublished')" href="#unpublished"><i class="la la-times me-2 text-warning"></i> Unpublished Article</a>
                             </li>
                             @if ($general->canAccess('module-data-article-trash', true))
                                 <li class="nav-item">
-                                    <a class="nav-link" data-bs-toggle="tab" onclick="changeTab('trashed')" href="#trashed"><i class="la la-trash me-2"></i> Trashed Article</a>
+                                    <a class="nav-link text-danger" data-bs-toggle="tab" onclick="changeTab('trashed')" href="#trashed"><i class="la la-trash me-2 text-danger"></i> Trashed Article</a>
                                 </li>
                             @endif
                         </ul>
@@ -46,10 +46,8 @@
                                                     <th width="1%">No</th>
                                                     <th width="10%">Image</th>
                                                     <th>Name</th>
-                                                    <th>Brand</th>
                                                     <th>Category</th>
-                                                    <th>Price</th>
-                                                    <th>Qty</th>
+                                                    <th>Status</th>
                                                     <th width="105px">Action</th>
                                                 </tr>
                                             </thead>
@@ -59,7 +57,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="active">
+                            <div class="tab-pane fade" id="published">
                                 <div class="pt-4">
                                     <div class="table-responsive">
                                         <div class="d-flex justify-content-between mb-3">
@@ -72,16 +70,14 @@
                                                 @endif
                                             </div>
                                         </div>
-                                        <table class="display table table-hover" id="data-table-active" width="100%">
+                                        <table class="display table table-hover" id="data-table-published" width="100%">
                                             <thead>
                                                 <tr>
                                                     <th width="1%">No</th>
                                                     <th width="10%">Image</th>
                                                     <th>Name</th>
-                                                    <th>Brand</th>
                                                     <th>Category</th>
-                                                    <th>Price</th>
-                                                    <th>Qty</th>
+                                                    <th>Status</th>
                                                     <th width="105px">Action</th>
                                                 </tr>
                                             </thead>
@@ -91,7 +87,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="inactive">
+                            <div class="tab-pane fade" id="unpublished">
                                 <div class="pt-4">
                                     <div class="table-responsive">
                                         <div class="d-flex justify-content-between mb-3">
@@ -104,16 +100,14 @@
                                                 @endif
                                             </div>
                                         </div>
-                                        <table class="display table table-hover" id="data-table-inactive" width="100%">
+                                        <table class="display table table-hover" id="data-table-unpublished" width="100%">
                                             <thead>
                                                 <tr>
                                                     <th width="1%">No</th>
                                                     <th width="10%">Image</th>
                                                     <th>Name</th>
-                                                    <th>Brand</th>
                                                     <th>Category</th>
-                                                    <th>Price</th>
-                                                    <th>Qty</th>
+                                                    <th>Status</th>
                                                     <th width="105px">Action</th>
                                                 </tr>
                                             </thead>
@@ -150,10 +144,8 @@
                                                         <th width="1%">No</th>
                                                         <th width="10%">Image</th>
                                                         <th>Name</th>
-                                                        <th>Brand</th>
                                                         <th>Category</th>
-                                                        <th>Price</th>
-                                                        <th>Qty</th>
+                                                        <th>Status</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -205,11 +197,9 @@
                 }
             },
             { data: 'image', name: 'image'},
-            { data: 'name', name: 'name' },
-            { data: 'brand_name', name: 'brand_name', orderable: false, searchable: false },
+            { data: 'title', name: 'title' },
             { data: 'category_name', name: 'category_name', orderable: false, searchable: false },
-            { data: 'price', name: 'price' },
-            { data: 'qty', name: 'qty' },
+            { data: 'status', name: 'status' },
         ];
 
         if (filter === 'trashed') {

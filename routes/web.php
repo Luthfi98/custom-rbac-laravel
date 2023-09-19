@@ -55,6 +55,8 @@ Route::prefix('cms')->middleware('auth')->group(function(){
         Route::resource('article-category', ArticleCategoryController::class);
         Route::resource('article-tag', ArticleTagController::class);
         Route::post('data-article/trashed', [ArticleDataController::class, 'storeTrashed'])->name('data-article.trashed.store');
+
+        Route::post('data-article/upload', [ArticleDataController::class, 'uploadFile'])->name('data-article.upload');
         Route::resource('data-article', ArticleDataController::class);
     });
 });

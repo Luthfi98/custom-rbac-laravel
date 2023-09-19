@@ -8,133 +8,70 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('pos-products.update', $product->id) }}" enctype="multipart/form-data" method="post">
+                    <form method="POST" action="{{ route('data-article.update', $article->id) }}" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="row">
                             <div class="col-12 mt-3">
                                 <label for="name">Name :</label>
-                                <input type="text" name="name" id="name" value="{{ $product->name }}" class="form-control">
+                                <input type="text" name="name" id="name" value="{{ $article->title }}" class="form-control">
                                 @error('name')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-12 mt-3">
-                                <label for="description">Description :</label>
-                                <textarea name="description" id="description" class="form-control" cols="30" rows="10">{{ $product->description }}</textarea>
-                                {{-- <div id="ckeditor"></div> --}}
-                                @error('description')
+                                <label for="content">Content :</label>
+                                <textarea name="content" id="content" class="form-control" cols="30" rows="10">{{ $article->content }}</textarea>
+                                @error('content')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
-
-                            <div class="col-lg-6 col-12">
-                                <div class="form-group mt-3">
-                                    <label for="category_id">Category :</label>
-                                    <select name="category_id" id="category_id" class="form-control select2">
-                                        <option value="">Select Category</option>
-                                        @foreach ($categories as $parentMenu)
-                                            <option {{ $product->category_id == $parentMenu->id ? 'selected' : '' }} value="{{ $parentMenu->id }}">{{ $parentMenu->name }}</option>
-                                            @foreach ($parentMenu->child as $childMenu)
-                                                <option {{ $product->category_id == $childMenu->id ? 'selected' : '' }} value="{{ $childMenu->id }}">- {{ $childMenu->name }}</option>
-                                                @foreach ($childMenu->child as $subChildMenu)
-                                                    <option {{ $product->category_id == $subChildMenu->id ? 'selected' : '' }} value="{{ $subChildMenu->id }}">-- {{ $subChildMenu->name }}</option>
-                                                @endforeach
-                                            @endforeach
-                                        @endforeach
-
-                                    </select>
-                                    @error('category_id')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                            <div class="col-12 mt-3">
+                                <label for="category">Category :</label>
+                                <select name="category" id="category" class="form-control select2">
+                                    <option value="" disabled>Select Category</option>
+                                    @foreach ($categories as $item)
+                                        <option value="{{ $item->id }}"  {{ $article->category_article_id === $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <div class="col-lg-6 col-12">
-                                <div class="form-group mt-3">
-                                    <label for="brand_id">Brand :</label>
-                                    <select name="brand_id" id="brand_id" class="form-control select2">
-                                        <option value="">Select Brand</option>
-                                        @foreach ($brands as $parentMenu)
-                                            <option {{ $product->brand_id == $parentMenu->id ? 'selected' : '' }} value="{{ $parentMenu->id }}">{{ $parentMenu->name }}</option>
-                                            @foreach ($parentMenu->child as $childMenu)
-                                                <option {{ $product->brand_id == $parentMenu->id ? 'selected' : '' }} value="{{ $childMenu->id }}">- {{ $childMenu->name }}</option>
-                                                @foreach ($childMenu->child as $subChildMenu)
-                                                    <option {{ $product->brand_id == $parentMenu->id ? 'selected' : '' }} value="{{ $subChildMenu->id }}">-- {{ $subChildMenu->name }}</option>
-                                                @endforeach
-                                            @endforeach
-                                        @endforeach
+                            @php
+                                $tagging = [];
+                                foreach ($article->tag as $key => $value) {
+                                    $tagging[] = $value->name;
+                                }
+                            @endphp
+                            <div class="col-12 mt-3">
+                                <label for="tags">Tags :</label>
+                                <select name="tags[]" id="tags" class="form-control select2-tags" multiple>
+                                    <option value="" disabled>Select Tags</option>
+                                    @foreach ($tags as $item)
+                                        @php
+                                            $select = array_search($item->name, $tagging);
 
-                                    </select>
-                                    @error('brand_id')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                                        @endphp
+                                        <option value="{{ $item->id }}" {{  is_int($select) ? 'selected' : '' }} >{{ $item->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
+
                         </div>
-                        <div class="row">
-                            <div class="col-lg-6 col-12">
-                                <div class="form-group mt-3">
-                                    <label for="price">Price :</label>
-                                    <div class="input-group mb-2">
-                                        <div class="input-group-text">Rp.</div>
-                                        <input type="text" class="form-control" value="{{ $product->price }}" name="price" id="price">
-                                    </div>
-                                    @error('price')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-lg-2 col-6">
-                                <div class="form-group mt-3">
-                                    <label for="qty">Qty :</label>
-                                    <div class="input-group mb-2">
-                                        <input type="text" class="form-control" value="{{ $product->qty }}" name="qty" id="qty">
-                                    </div>
-                                    @error('qty')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-6">
-                                <div class="form-group mt-3">
-                                    <label for="unit_id">Unit:</label>
-                                    <select name="unit_id" id="unit_id" class="form-control select2">
-                                        @foreach ($units as $item)
-                                            <option value="{{ $item->id }}" {{ $product->unit_id == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('unit_id')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-6 col-12">
-                                <div class="form-group mt-3">
-                                    <label for="image">Image:</label>
-                                    <br>
-                                    <img src="{{ url($product->image) }}" alt="" id="preview" width="250px">
-                                    <input type="file" name="image" id="image" class="form-control">
-                                    @error('image')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-12">
-                                <div class="from-group mt-3">
+                        <div class="form-group mt-3">
+                            <label for="image">Image  : </label>
+                            <br>
+                            <img src="{{ url($article->image) }}" alt="No Image" width="250px" id="preview">
 
-                                    <label for="status">Status :</label>
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" name="status" type="checkbox" id="status" {{ $product->status == 'Active' ? 'checked' : ''  }} value="Active">
-                                        <label class="form-check-label" id="text-status" for="status">{{ $product->status == 'Active' ? 'Active' : 'InActive'  }}</label>
-                                    </div>
-                                </div>
-                            </div>
+                            <input type="file" class="form-control" name="image" id="image">
+                            @error('image')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="mt-3">
-                            <a href="{{ route('pos-products.index') }}" class="btn btn-secondary">{{ __('Back') }}</a>
-                            <button type="submit" class="btn btn-primary">{{__('Create')}}</button>
+                            <a href="{{ route('data-article.index') }}" class="btn btn-secondary">{{ __('Back') }}</a>
+                            <button type="submit" class="btn btn-primary">{{__('Update')}}</button>
+                            @if ($general->canAccess('module-data-article-publish', true))
+                                <a href="{{ route('data-article.published', $article->id) }}" class="btn btn-success btn-sm" title="Publish"><span class="fa fa-check"></span> {{__("Publish Article")}}</a>
+                            @endif
                         </div>
                     </form>
                 </div>
@@ -154,6 +91,9 @@
 <script src="{{ asset('cms/vendor/ckeditor/ckeditor.js') }}"></script>
 <script type="text/javascript">
     $(".select2").select2();
+    $(".select2-tags").select2({
+        tags:true
+    });
     $("#status").change(function() {
         var statusText = $("#text-status");
         if ($(this).is(":checked")) {
@@ -181,20 +121,21 @@
     })
 
     ClassicEditor
-    .create( document.querySelector( '#description' ), {
-        toolbar: {
-            items: [
-                'heading',
-                'bold',
-                'italic',
-                'link',
-                'bulletedList',
-                'numberedList',
-                'blockQuote',
-                'undo',
-                'redo'
-            ]
+    .create( document.querySelector( '#content' ), {
+        // toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'imageUpload'],
+        ckfinder: {
+            uploadUrl: '{{route('data-article.upload').'?_token='.csrf_token()}}',
         },
+
+        // image: {
+        //     upload: {
+        //         types: ['jpeg', 'jpg', 'png', 'gif'],
+        //         url: "{{ route('data-article.upload') }}",
+        //         headers: {
+        //             'X-CSRF-TOKEN': "{{ csrf_token() }}" // Gantilah ini dengan token CSRF yang sesuai
+        //         }
+        //     }
+        // }
     } )
     .then( editor => {
         window.editor = editor;
