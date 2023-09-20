@@ -1,9 +1,6 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\Cms\Article\CategoryController as ArticleCategoryController;
-use App\Http\Controllers\Cms\Article\TagController as ArticleTagController;
-use App\Http\Controllers\Cms\Article\DataController as ArticleDataController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Cms\DashboardController;
 use App\Http\Controllers\Cms\MenuController;
@@ -50,15 +47,6 @@ Route::prefix('cms')->middleware('auth')->group(function(){
     Route::get('profile', [ProfileController::class, 'index'])->name('profile');
     Route::post('profile', [ProfileController::class, 'store'])->name('profile.store');
     Route::post('profile/change/{any}', [ProfileController::class, 'change'])->name('profile.change');
-
-    Route::prefix('article')->group(function(){
-        Route::resource('article-category', ArticleCategoryController::class);
-        Route::resource('article-tag', ArticleTagController::class);
-        Route::post('data-article/trashed', [ArticleDataController::class, 'storeTrashed'])->name('data-article.trashed.store');
-
-        Route::post('data-article/upload', [ArticleDataController::class, 'uploadFile'])->name('data-article.upload');
-        Route::resource('data-article', ArticleDataController::class);
-    });
 });
 
 Route::get('login', [AuthController::class, 'index'])->name('login');
