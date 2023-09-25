@@ -11,15 +11,15 @@
             <div id="mCSB_1" class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside" style="max-height: 653px;" tabindex="0">
                 <div id="mCSB_1_container" class="mCSB_container" style="position:relative; top:0; left:0;" dir="ltr">
                     <div class="login-form style-2">
-                        <div class="card-body">
-                            <div class="logo-header">
-                                <a href="{{ route('login') }}" class="logo"><img src="{{ asset('cms/images/logo/logo-full.png') }}" alt="" class="width-230 light-logo"></a>
-                                <a href="{{ route('login') }}" class="logo"><img src="{{ asset('cms/images/logo/logofull-white.png') }}" alt="" class="width-230 dark-logo"></a>
+                        <div class="card-body text-center">
+                            <div class="logo-header text-center">
+
+                                <a href="{{ route('login') }}" class="text-center"><img src="{{ asset($general->getSetting()->logo) }}" alt="" width="100px" class=""></a>
                             </div>
 
                             <form action="{{ route('login.do') }}" method="POST" class=" dz-form pb-3">
                                 @csrf
-                                <h3 class="form-title m-t0">Personal Information</h3>
+                                <h3 class="form-title m-t0">Login Page</h3>
                                 <div class="dz-separator-outer m-b5">
                                     <div class="dz-separator bg-primary style-liner"></div>
                                 </div>

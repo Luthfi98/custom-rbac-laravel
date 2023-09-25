@@ -127,6 +127,7 @@ class UserController extends Controller
             $userRole->role_id = $value;
             $userRole->save();
         }
+        $this->access->log('Create', 'Create User '.$user->fullname);
 
         session()->flash('success', 'Successfully Created User');
         return redirect(route('users.index'));
@@ -209,6 +210,7 @@ class UserController extends Controller
         UserRole::where('user_id', $user->id)
             ->whereNotIn('role_id', $request->roles)
             ->delete();
+        $this->access->log('Edit', 'Update User '.$user->fullname);
 
         session()->flash('success', 'Successfully Updated User');
         return redirect(route('users.index'));
@@ -222,6 +224,8 @@ class UserController extends Controller
         $this->access->canAccess('module-user-delete');
 
         $user->delete();
+        $this->access->log('Delete', 'Delete User '.$user->fullname);
+
         session()->flash('success', 'Successfully Deleted User');
 
         return redirect(route('users.index'));

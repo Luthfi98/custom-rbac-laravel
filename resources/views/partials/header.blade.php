@@ -13,4 +13,4 @@
 <meta name="format-detection" content="telephone=no">
 <title>{{$general->getSetting()->name}} - @yield('title')</title>
 	<!-- FAVICONS ICON -->
-<link rel="shortcut icon" type="image/png" href="{{ asset('cms/images/favicon.png') }}">
+<link rel="shortcut icon" type="image/png" href="{{ asset($general->getSetting()->icon) }}">

@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Models\Activity;
 use App\Models\Menu;
 use App\Models\Permission;
 use App\Models\RolePermission;
@@ -77,6 +78,20 @@ class GeneralHelper {
         // dd();
     }
 
+    function log($type, $description)
+    {
+        $activity = new Activity();
+        $activity->user_id = Auth::user()->id;
+        $activity->url = url()->current();
+        $activity->ip = request()->ip();
+        $activity->description = $description;
+        $activity->data = json_encode(request()->input());
+        $activity->type = $type;
+        $activity->save();
+
+        return true;
+    }
+
     function getSetting()
     {
         $settingPath = storage_path('settings.json');
@@ -85,5 +100,24 @@ class GeneralHelper {
         // Decode the JSON content
         $setting = json_decode($jsonContents);
         return $setting;
+    }
+
+    function detailActivity($data, $html = null)
+    {
+        foreach ($data as $key => $value) {
+            // var_dump(is_object($value), $value, is_array($value));die;
+            $html .= "<li>";
+                $html .= '<b>'.$key.' : </b> ';
+                if (is_array($value) || is_object($value)) {
+                    $html .= '<ul>';
+                    $html .= $this->detailActivity($value, $html);
+                    $html .= '</ul>';
+                }else{
+                    // $html .= $value;
+                }
+            $html .= "</li>";
+        }
+        var_dump($html);
+        // return $html;
     }
 }

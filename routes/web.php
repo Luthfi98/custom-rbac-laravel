@@ -34,7 +34,10 @@ Route::prefix('cms')->middleware('auth')->group(function(){
 
     Route::resource('roles', RoleController::class);
 
+    Route::get('report-activity-user', [WebsiteController::class, 'userActivity'])->name('report-activity-user');
+    Route::get('report-activity-user/{any}', [WebsiteController::class, 'userActivity']);
     Route::resource('website', WebsiteController::class);
+
 
     Route::get('trashed/users', [UserController::class, 'trashed'])->name('users.trashed');
     Route::post('trashed/users', [UserController::class, 'storeTrashed'])->name('users.trashed.store');
@@ -47,6 +50,7 @@ Route::prefix('cms')->middleware('auth')->group(function(){
     Route::get('profile', [ProfileController::class, 'index'])->name('profile');
     Route::post('profile', [ProfileController::class, 'store'])->name('profile.store');
     Route::post('profile/change/{any}', [ProfileController::class, 'change'])->name('profile.change');
+
 });
 
 Route::get('login', [AuthController::class, 'index'])->name('login');

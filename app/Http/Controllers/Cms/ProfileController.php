@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Cms;
 
+use App\Helpers\GeneralHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\User;
@@ -12,6 +13,11 @@ use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
 {
+    private $access;
+
+    public function __construct() {
+        $this->access = new GeneralHelper();
+    }
     public function index()
     {
         $user = User::with(['roles.role', 'role'])->find(Auth::id());
@@ -70,6 +76,8 @@ class ProfileController extends Controller
         $user->default_role = $request->default_role;
         // dd($user);
         $user->save();
+        $this->access->log('Edit', 'Update Profile');
+
 
         session()->flash('success', 'Successfully Updated Data');
 

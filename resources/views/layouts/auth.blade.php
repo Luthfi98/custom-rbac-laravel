@@ -1,3 +1,7 @@
+@php
+    $general = new GeneralHelper;
+
+@endphp
 <!DOCTYPE html>
 <html lang="en" class="h-100">
 

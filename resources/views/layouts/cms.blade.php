@@ -17,8 +17,10 @@
         Preloader start
     ********************-->
     <div id="preloader">
-		<div>
-			<img src="{{ asset('cms/images/pre.gif') }} " alt="">
+		<div class="text-center">
+			<img src="{{ asset($general->getSetting()->logo) }} " alt="">
+            <br>
+            <h4>{{ $general->getSetting()->name }}</h4>
 		</div>
     </div>
     <!--*******************

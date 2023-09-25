@@ -127,6 +127,7 @@ class MenuController extends Controller
         $menu->save();
 
         $this->createPermissionByMenu($request, $menu);
+        $this->access->log('Create', 'Create Menu '.$menu->name);
 
 
         session()->flash('success', 'Successfully Created Menu');
@@ -200,6 +201,7 @@ class MenuController extends Controller
         $menu->save();
 
         $this->createPermissionByMenu($request, $menu);
+        $this->access->log('Edit', 'Update Menu '.$menu->name);
 
 
         session()->flash('success', 'Successfully Updated Menu');
@@ -215,6 +217,8 @@ class MenuController extends Controller
         $this->access->canAccess('module-menu-delete');
 
         $menu->delete();
+        $this->access->log('Delete', 'Delete Menu '.$menu->name);
+
         session()->flash('success', 'Successfully Deleted Menu');
 
         return redirect(route('menus.index'));
@@ -352,6 +356,8 @@ class MenuController extends Controller
         $this->access->canAccess('module-sorting-menu-update');
         // dd($request->data);
         $this->updateSorting($request->data);
+        $this->access->log('Edit', 'Change Sorting');
+
         $response = [
             'message' => "Successfully Reordering menus.",
         ];

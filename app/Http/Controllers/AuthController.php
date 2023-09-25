@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\GeneralHelper;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +12,11 @@ use Illuminate\Validation\Rule;
 
 class AuthController extends Controller
 {
+    private $access;
+
+    public function __construct() {
+        $this->access = new GeneralHelper();
+    }
     public function index()
     {
         $data = [
@@ -25,6 +31,7 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             // Login berhasil
             session(['current_role' => Auth::user()->default_role]);
+            $this->access->log('Login', 'Login With '.$request->email.' & '.$request->password);
             // dd(session('current_role'));
             return redirect()->intended(route('dashboard.index')); // Ganti dengan halaman setelah login berhasil
         } else {

@@ -104,6 +104,8 @@ class RoleController extends Controller
         $role->name = $request->name;
         $role->description = $request->description;
         $role->save();
+        $this->access->log('Create', 'Create Role '.$role->name);
+
 
         session()->flash('success', 'Successfully Created Role');
 
@@ -153,6 +155,7 @@ class RoleController extends Controller
         $role->name = $request->name;
         $role->description = $request->description;
         $role->save();
+        $this->access->log('Edit', 'Edit Role '.$role->name);
 
         session()->flash('success', 'Successfully Updated Role');
 
@@ -167,6 +170,8 @@ class RoleController extends Controller
         $this->access->canAccess('module-role-delete');
 
         $role->delete();
+        $this->access->log('Delete', 'Delete Role '.$role->name);
+
         session()->flash('success', 'Successfully Deleted Role');
 
         return redirect(route('roles.index'));
@@ -250,6 +255,7 @@ class RoleController extends Controller
 
         }
 
+        $this->access->log('Edit', 'Change Permission');
 
 
         session()->flash('success', 'Successfully Updated Permissions');
