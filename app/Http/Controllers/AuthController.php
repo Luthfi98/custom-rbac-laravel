@@ -75,7 +75,7 @@ class AuthController extends Controller
         // dd($user);
         Auth::attempt(['email' => $user->email, 'password' => $request->password]);
         session()->flash('success', 'Register Successfully');
-        return redirect()->intended(route('cms.dashboard')); // Ganti dengan halaman setelah login berhasil
+        return redirect()->intended(route('dashboard.index')); // Ganti dengan halaman setelah login berhasil
 
 
 

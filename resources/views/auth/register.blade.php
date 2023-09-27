@@ -24,24 +24,42 @@
                                 </div>
                                 <p>Enter your personal details below: </p>
                                 <div class="form-group mt-3">
-                                    <input name="fullname" required="" class="form-control" placeholder="Full Name" type="text">
+                                    <input name="fullname" value="{{ old('fullname') }}" required="" class="form-control" placeholder="Full Name" type="text">
+                                    @error('fullname')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 <div class="form-group mt-3">
-                                    <input name="username" required="" class="form-control" placeholder="User Name" value="" type="text">
+                                    <input name="username" value="{{ old('username') }}" required="" class="form-control" placeholder="User Name" value="" type="text">
+                                    @error('username')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 <div class="form-group mt-3">
-                                    <input name="email" required="" class="form-control" placeholder="Email Address" type="email">
+                                    <input name="email" value="{{ old('email') }}" required="" class="form-control" placeholder="Email Address" type="email">
+                                    @error('email')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
                                 <div class="form-group mt-3">
-                                    <input name="phone" required="" class="form-control" placeholder="Phone Number" type="text">
+                                    <input name="phone" value="{{ old('phone') }}" required="" class="form-control" placeholder="Phone Number" type="text">
+                                    @error('phone')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
                                 <div class="form-group mt-3">
                                     <input name="password" required="" class="form-control" placeholder="Password" type="password">
+                                    @error('password')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 <div class="form-group mt-3 mb-3">
                                     <input name="password_confirmation" required="" class="form-control" placeholder="Re-type Your Password" type="password">
+                                    @error('password_confirmation')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 <div class="mb-3">
                                     <span class="form-check float-start me-2 ">
