@@ -106,18 +106,19 @@ class GeneralHelper {
     {
         foreach ($data as $key => $value) {
             // var_dump(is_object($value), $value, is_array($value));die;
-            $html .= "<li>";
+            $hide = $key == '_token' ? 'hidden' : '';
+            $html .= "<li $hide>";
                 $html .= '<b>'.$key.' : </b> ';
                 if (is_array($value) || is_object($value)) {
                     $html .= '<ul>';
                     $html .= $this->detailActivity($value, $html);
                     $html .= '</ul>';
                 }else{
-                    // $html .= $value;
+                    $html .= $value;
                 }
             $html .= "</li>";
         }
-        var_dump($html);
-        // return $html;
+        // var_dump($html);
+        return $html;
     }
 }

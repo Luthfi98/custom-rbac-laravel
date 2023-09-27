@@ -57,7 +57,7 @@
                 }
             })
         }
-        
+
         function toastSuccess(msg, delay = '300')
         {
             toastr.success(msg, "Notification", {
@@ -151,6 +151,45 @@
             // const url = $(_data).attr('url')
             // console.log(url)
             swalConfirm(id)
+        }
+
+        var handleThemeMode = function() {
+
+            $('.dz-theme-mode').on('click',function(){
+                $(this).toggleClass('active');
+
+                if($(this).hasClass('active')){
+                    var theme = 'dark';
+
+                    $(`#icon-light`).removeAttr('hidden')
+                    $(`#icon-dark`).attr('hidden', true)
+
+                }else{
+                    var theme = 'light';
+                    $(`#icon-dark`).removeAttr('hidden')
+                    $(`#icon-light`).attr('hidden', true)
+                }
+
+                var formData = {
+                    theme: theme,
+                    _token: '{{ csrf_token() }}' // Include CSRF token for Laravel
+                };
+
+                $.ajax({
+                    url:"{{ route('profile.preference') }}",
+                    data:formData,
+                    type:"POST",
+                    dataType:"JSON",
+                    success:function(response)
+                    {
+                        $('body').attr('data-theme-version',theme);
+                        // $('.dz-theme-mode').removeClass('active')
+
+                    }
+                })
+            });
+
+
         }
     </script>
     @yield('js')

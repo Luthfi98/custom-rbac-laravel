@@ -11,7 +11,7 @@
 
 
 </head>
-<body>
+<body data-theme-version="{{ Auth::user()->theme_version }}">
 
     <!--*******************
         Preloader start

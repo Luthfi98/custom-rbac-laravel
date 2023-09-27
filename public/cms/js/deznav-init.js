@@ -3,7 +3,7 @@
 
 var dzSettingsOptions = {};
 
-function getUrlParams(dParam) 
+function getUrlParams(dParam)
 	{
 		var dPageURL = window.location.search.substring(1),
 			dURLVariables = dPageURL.split('&'),
@@ -20,21 +20,21 @@ function getUrlParams(dParam)
 	}
 
 (function($) {
-	
+
 	"use strict"
-	
+
 	/* var direction =  getUrlParams('dir');
-	
+
 	if(direction == 'rtl')
 	{
-        direction = 'rtl'; 
+        direction = 'rtl';
     }else{
-        direction = 'ltr'; 
+        direction = 'ltr';
     } */
-	
+
 	dzSettingsOptions = {
 		typography: "poppins",
-		version: "light",
+		// version: "light",
 		layout: "vertical",
 		primary: "color_1",
 		headerBg: "color_1",
@@ -46,18 +46,18 @@ function getUrlParams(dParam)
 		containerLayout: "full",
 	};
 
-	
-	
-	
-	new dzSettings(dzSettingsOptions); 
+
+
+
+	new dzSettings(dzSettingsOptions);
 
 	jQuery(window).on('resize',function(){
         /*Check container layout on resize */
 		///alert(dzSettingsOptions.primary);
         dzSettingsOptions.containerLayout = $('#container_layout').val();
         /*Check container layout on resize END */
-        
-		new dzSettings(dzSettingsOptions); 
+
+		new dzSettings(dzSettingsOptions);
 	});
-	
+
 })(jQuery);

@@ -356,7 +356,7 @@ class MenuController extends Controller
         $this->access->canAccess('module-sorting-menu-update');
         // dd($request->data);
         $this->updateSorting($request->data);
-        $this->access->log('Edit', 'Change Sorting');
+        // $this->access->log('Edit', 'Change Sorting');
 
         $response = [
             'message' => "Successfully Reordering menus.",

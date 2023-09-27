@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
@@ -94,5 +95,17 @@ class ProfileController extends Controller
         session()->flash('success', 'Successfully Change Role');
 
         return redirect(route('profile'));
+    }
+
+    function storePreference(Request $request)
+    {
+        $theme = $request->theme;
+        $user = User::find(Auth::id());
+
+        $user->theme_version = $theme;
+        $user->save();
+
+        return response()->json($theme, HttpResponse::HTTP_OK);
+
     }
 }

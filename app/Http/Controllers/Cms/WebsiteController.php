@@ -162,13 +162,19 @@ class WebsiteController extends Controller
         }
 
         if ($id) {
+            $activity = Activity::find($id);
+            if(!$activity){
+                session()->flash('warning', 'Activity Not Found');
+
+                return redirect(route('report-activity-user'));
+            }
             $data = [
                 'title' => 'Detail Activity',
-                'activity' => Activity::find($id)
+                'activity' => $activity
             ];
             $dataActivity = json_decode($data['activity']->data);
             $data['data'] = $this->access->detailActivity($dataActivity);
-            die;
+            // die;
             // dd($data['data']);
 
             return view('cms.activities.detail', $data);

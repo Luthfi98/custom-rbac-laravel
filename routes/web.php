@@ -47,6 +47,7 @@ Route::prefix('cms')->middleware('auth')->group(function(){
     Route::get('roles/permission/{any}', [RoleController::class, 'permission'])->name('roles.permission');
     Route::post('roles.storePermission', [RoleController::class, 'storePermission'])->name('roles.storePermission');
 
+    Route::post('preference/users', [ProfileController::class, 'storePreference'])->name('profile.preference');
     Route::get('profile', [ProfileController::class, 'index'])->name('profile');
     Route::post('profile', [ProfileController::class, 'store'])->name('profile.store');
     Route::post('profile/change/{any}', [ProfileController::class, 'change'])->name('profile.change');

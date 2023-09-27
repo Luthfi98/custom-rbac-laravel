@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             // Tambahkan kolom default_role dengan tipe data yang sesuai
-            $table->foreignId('default_role')->nullable();
+            $table->foreignId('default_role')->nullable()->after('remember_token');
 
             // Buat relasi antara default_role dengan id di tabel roles
             $table->foreign('default_role')->references('id')->on('roles')->onDelete('cascade');
