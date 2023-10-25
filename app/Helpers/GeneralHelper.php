@@ -65,10 +65,16 @@ class GeneralHelper {
         // return true;
         if(!$userRole || !$rolePermission)
         {
-            if($isMenu){
-                return false;
+            if ($role_id == 1) {
+                return true;
+
             }else{
-                return abort(Response::HTTP_FORBIDDEN, '403 Unauthorized');
+
+                if($isMenu){
+                    return false;
+                }else{
+                    return abort(Response::HTTP_FORBIDDEN, '403 Unauthorized');
+                }
             }
 
         }else{
