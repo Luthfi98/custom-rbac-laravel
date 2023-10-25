@@ -22,31 +22,53 @@ class GeneralHelper {
         $currentRole = session('current_role');
         $requiredPermission = 'show'; // Izin yang mengandung "show"
 
+        if ($currentRole == 1) {
+            $menus = $this->getMenuAdmin();
+        }else{
+            $menus = Menu::with([
+                'child' => function ($query) use ($currentRole, $requiredPermission) {
+                    $query->with(['child' => function($subQuery) use ($currentRole, $requiredPermission) {
+                        $subQuery->orderBy('sort', 'asc')
+                                 ->whereHas('permissions', function ($subSubQuery) use ($currentRole, $requiredPermission) {
+                                    $subSubQuery->where('role_permissions.role_id', $currentRole)
+                                                ->where('permissions.name', 'LIKE', "%$requiredPermission%")
+                                                ->join('role_permissions', 'permissions.id', '=', 'role_permissions.permission_id');
+                                });
+                    }])
+                    ->whereHas('permissions', function ($subQuery) use ($currentRole, $requiredPermission) {
+                        $subQuery->where('role_permissions.role_id', $currentRole)
+                                 ->where('permissions.name', 'LIKE', "%$requiredPermission%")
+                                 ->join('role_permissions', 'permissions.id', '=', 'role_permissions.permission_id');
+                    })
+                    ->orderBy('sort', 'asc');
+                }
+            ])
+            ->orderBy('sort', 'asc')
+            ->whereNull('parent_id')
+            ->whereHas('permissions', function ($query) use ($currentRole, $requiredPermission) {
+                $query->where('role_permissions.role_id', $currentRole)
+                      ->where('permissions.name', 'LIKE', "%$requiredPermission%")
+                      ->join('role_permissions', 'permissions.id', '=', 'role_permissions.permission_id');
+            })
+            ->get();
+        }
+
+        return $menus;
+    }
+
+    private function getMenuAdmin() {
+        $currentRole = session('current_role');
+        $requiredPermission = 'show'; // Izin yang mengandung "show"
+
         $menus = Menu::with([
             'child' => function ($query) use ($currentRole, $requiredPermission) {
                 $query->with(['child' => function($subQuery) use ($currentRole, $requiredPermission) {
-                    $subQuery->orderBy('sort', 'asc')
-                             ->whereHas('permissions', function ($subSubQuery) use ($currentRole, $requiredPermission) {
-                                $subSubQuery->where('role_permissions.role_id', $currentRole)
-                                            ->where('permissions.name', 'LIKE', "%$requiredPermission%")
-                                            ->join('role_permissions', 'permissions.id', '=', 'role_permissions.permission_id');
-                            });
-                }])
-                ->whereHas('permissions', function ($subQuery) use ($currentRole, $requiredPermission) {
-                    $subQuery->where('role_permissions.role_id', $currentRole)
-                             ->where('permissions.name', 'LIKE', "%$requiredPermission%")
-                             ->join('role_permissions', 'permissions.id', '=', 'role_permissions.permission_id');
-                })
-                ->orderBy('sort', 'asc');
+                    $subQuery->orderBy('sort', 'asc');
+                }])->orderBy('sort', 'asc');
             }
         ])
         ->orderBy('sort', 'asc')
         ->whereNull('parent_id')
-        ->whereHas('permissions', function ($query) use ($currentRole, $requiredPermission) {
-            $query->where('role_permissions.role_id', $currentRole)
-                  ->where('permissions.name', 'LIKE', "%$requiredPermission%")
-                  ->join('role_permissions', 'permissions.id', '=', 'role_permissions.permission_id');
-        })
         ->get();
 
         return $menus;
