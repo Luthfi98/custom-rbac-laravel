@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
 
 class PermissionSeeder extends Seeder
@@ -14,8 +15,7 @@ class PermissionSeeder extends Seeder
      */
     public function run()
     {
-        // Truncate the existing records to start from scratch
-        DB::table('permissions')->truncate();
+
 
         // Insert data into the permissions table
         DB::table('permissions')->insert([

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
 
 class UserRoleSeeder extends Seeder
@@ -14,8 +15,6 @@ class UserRoleSeeder extends Seeder
      */
     public function run()
     {
-        // Truncate the existing records to start from scratch
-        DB::table('user_roles')->truncate();
 
         // Insert data into the user_roles table
         DB::table('user_roles')->insert([
